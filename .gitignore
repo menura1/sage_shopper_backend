@@ -1,0 +1,36 @@
+# npm
+
+node_modules/
+package-lock.json
+
+# Logs
+
+logs/
+\*.log
+
+# Coverage
+
+coverage/
+.nyc_output/
+
+# Build artifacts
+
+build/
+dist/
+
+# Temp files
+
+_.tmp
+_.DS_Store
+
+# Environment variables
+
+.env
+.env.development
+.env.test
+.env.production
+
+# Other files
+
+README.md
+LICENSE
