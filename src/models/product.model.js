@@ -23,8 +23,8 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ProductCategories,
-    required: true,
+    // enum: ProductCategories,
+    required: false,
   },
   imageUrl: {
     type: String,
