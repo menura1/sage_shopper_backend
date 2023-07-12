@@ -11,5 +11,6 @@ consumerRouter.post(
   Auth,
   ConsumerController.updateConsumerAccount
 );
+consumerRouter.get("/geoInfo", ConsumerController.getGeoInfo);
 
 module.exports.ConsumerRouter = consumerRouter;

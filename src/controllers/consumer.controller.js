@@ -47,8 +47,19 @@ const updateConsumerAccount = async (req, res) => {
   }
 };
 
+/// get geo info of the req ip address
+const getGeoInfo = async (req, res) => {
+  try {
+    const data = await ConsumerService.getGeoInfo(req);
+    res.json(data);
+  } catch (e) {
+    res.status(500).json("Error!");
+  }
+};
+
 module.exports.ConsumerController = {
   registerConsumer,
   loginConsumer,
   updateConsumerAccount,
+  getGeoInfo,
 };

@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const { Consumer } = require("../models/consumer.model");
 const jwt = require("jsonwebtoken");
 const { JwtSecret } = require("../constants/commonConstants");
+const axios = require("axios");
 
 /// Register new consumer
 const registerConsumer = async (data) => {
@@ -83,8 +84,20 @@ const updateConsumerAccount = async (data) => {
   return await user.save();
 };
 
+/// get geo info of the req ip address
+const getGeoInfo = async (req) => {
+  const r = await axios.request({
+    method: "get",
+    url: `http://ip-api.com/json/${
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress
+    }?fields=lat,lon,country,city`,
+  });
+  return r.data;
+};
+
 module.exports.ConsumerService = {
   registerConsumer,
   loginConsumer,
   updateConsumerAccount,
+  getGeoInfo,
 };
