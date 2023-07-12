@@ -27,6 +27,14 @@ const UserDemographics = new mongoose.Schema(
         required: true,
         default: [0, 0],
       },
+      city: {
+        type: String,
+        required: true,
+      },
+      country: {
+        type: String,
+        required: true,
+      },
     },
     interests: {
       type: [String],

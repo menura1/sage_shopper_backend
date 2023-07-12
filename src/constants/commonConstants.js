@@ -128,8 +128,11 @@ const citiesInSriLanka = [
   "Ambalangoda",
 ];
 
+const jwtSecret = "b22dkFdkdjndlV36M3b39dkdldlvbdAQSe1";
+
 module.exports = {
   ProductCategories: productCategories,
   BuyerInterests: buyerInterests,
   CitiesInSriLanka: citiesInSriLanka,
+  JwtSecret: jwtSecret,
 };

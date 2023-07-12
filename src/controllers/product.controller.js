@@ -26,7 +26,8 @@ const getAllProducts = async (_, res) => {
 const getProductsByDemographics = async (req, res) => {
   try {
     const products = await ProductService.getProductsByDemographics(
-      req.body.consumerId
+      req.query.consumerId,
+      req.query.coordinates
     );
     if (products) {
       return res.json(products);

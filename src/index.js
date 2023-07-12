@@ -6,6 +6,7 @@ const { AppRouter } = require("./routes/routes");
 const mongoose = require("mongoose");
 const Product = require("./models/product.model");
 const { Consumer } = require("./models/consumer.model");
+const { errorHandler } = require("./middleware/error");
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms")
 );
-
+app.use(errorHandler);
 app.use("/", AppRouter);
 
 app.listen(process.env.PORT || 5001, () => {

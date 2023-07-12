@@ -22,7 +22,8 @@ const getAllProducts = async () => {
 };
 
 /// Get most matching products for a consumer
-const getProductsByDemographics = async (userId) => {
+const getProductsByDemographics = async (userId, coordinates = []) => {
+  console.log(coordinates);
   try {
     // Find the user with the given userId
     const user = await Consumer.findById(userId);
@@ -40,7 +41,11 @@ const getProductsByDemographics = async (userId) => {
     // Calculate the matching score for each product
     const productsWithScores = products.map((product) => {
       const targetAudience = product.targetAudience;
-      const score = calculateMatchingScore(userDemographics, targetAudience);
+      const score = calculateMatchingScore(
+        userDemographics,
+        targetAudience,
+        coordinates
+      );
 
       return {
         ...product,
@@ -58,7 +63,11 @@ const getProductsByDemographics = async (userId) => {
 };
 
 // Helper function to calculate matching score between user demographics and target audience demographics
-function calculateMatchingScore(userDemographics, targetDemographics) {
+function calculateMatchingScore(
+  userDemographics,
+  targetDemographics,
+  coordinates
+) {
   let score = 0;
 
   // Calculate matching score based on gender
@@ -67,7 +76,7 @@ function calculateMatchingScore(userDemographics, targetDemographics) {
 
   // Increase the score if the user and target have the same gender or if the target is gender-neutral
   if (userGender === targetGender || targetGender === "neutral") {
-    score += 100;
+    score += 20;
   }
 
   // Calculate matching score based on age
@@ -75,7 +84,10 @@ function calculateMatchingScore(userDemographics, targetDemographics) {
   const targetAge = targetDemographics.age;
 
   // Increase the score based on the proximity of age
-  score += 100 - Math.abs(userAge - targetAge);
+  const ageDiff = Math.abs(userAge - targetAge);
+  // Normalize the value adding to the score
+  const normalizedValue = 1 - Math.log10(ageDiff + 1) / Math.log10(150);
+  score += normalizedValue * 20;
 
   // Calculate matching score based on common interests
   const userInterests = userDemographics.interests;
@@ -85,24 +97,42 @@ function calculateMatchingScore(userDemographics, targetDemographics) {
   const commonInterests = userInterests.filter((interest) =>
     targetInterests.includes(interest)
   );
-  score += 50 * commonInterests.length;
+  // Add the normalized value to the score
+  score += (commonInterests.length / targetInterests.length) * 20;
 
   // Calculate matching score based on location
-  const userLocation = userDemographics.location.coordinates;
-  const targetLocation = targetDemographics.location.coordinates;
+  const userLocation =
+    coordinates.length == 0
+      ? {
+          latitude: userDemographics.location.coordinates[1],
+          longitude: userDemographics.location.coordinates[0],
+        }
+      : {
+          latitude: coordinates[1],
+          longitude: coordinates[0],
+        };
+
+  const targetLocation = {
+    latitude: targetDemographics.location.coordinates[1],
+    longitude: targetDemographics.location.coordinates[0],
+  };
 
   // Calculate the distance between the user and the target location using geolib
   const distance = geolib.getDistance(userLocation, targetLocation);
+  const distanceScore = Math.max(20 - (distance / 1000000000) * 20, 0);
 
   // Increase the score based on proximity (closer distance gets higher score)
-  score += 100 - distance;
+  score += distanceScore;
 
-  // Calculate matching score based on average monthly income
+  // Increase the score based on the proximity of average monthly income
   const userIncome = userDemographics.avgMonthlyIncome;
   const targetIncome = targetDemographics.avgMonthlyIncome;
 
-  // Increase the score based on the proximity of average monthly income
-  score += 100 - Math.abs(userIncome - targetIncome);
+  const diff = Math.abs(userIncome - targetIncome);
+  // Normalize the value adding to the score
+  const normalizedDiff = 1 - Math.log10(diff + 1) / Math.log10(500000000);
+  const incomeScore = normalizedDiff * 20;
+  score += incomeScore;
 
   return score;
 }

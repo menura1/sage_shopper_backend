@@ -34,7 +34,21 @@ const loginConsumer = async (req, res) => {
   }
 };
 
+/// Update consumer account
+const updateConsumerAccount = async (req, res) => {
+  try {
+    const user = await ConsumerService.updateConsumerAccount(req.body);
+    if (!user) {
+      throw Error("User update failed!");
+    }
+    return res.json(user);
+  } catch (e) {
+    return res.status(500).json(e.message);
+  }
+};
+
 module.exports.ConsumerController = {
   registerConsumer,
   loginConsumer,
+  updateConsumerAccount,
 };
