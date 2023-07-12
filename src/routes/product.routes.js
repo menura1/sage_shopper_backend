@@ -20,7 +20,9 @@ productRouter.get("/ip", async (req, res) => {
   console.log(req.headers["x-forwarded-for"] || req.socket.remoteAddress);
   const r = await axios.request({
     method: "get",
-    url: "http://ip-api.com/json?fields=lat,lon,country,city",
+    url: `http://ip-api.com/json/${
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress
+    }?fields=lat,lon,country,city`,
   });
   console.log(r.data);
   return res.json(r.data);
