@@ -21,7 +21,7 @@ productRouter.get("/ip", async (req, res) => {
     method: "get",
     url: "http://ip-api.com/json?fields=lat,lon,country,city",
   });
-  console.log(r.response.data);
+  console.log(r.data);
   return res.json(r.data);
 });
 
