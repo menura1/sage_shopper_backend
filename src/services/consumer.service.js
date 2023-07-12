@@ -86,13 +86,13 @@ const updateConsumerAccount = async (data) => {
 
 /// get geo info of the req ip address
 const getGeoInfo = async (req) => {
-  const r = await axios.request({
+  const res = await axios.request({
     method: "get",
     url: `http://ip-api.com/json/${
       req.headers["x-forwarded-for"] || req.socket.remoteAddress
     }?fields=lat,lon,country,city`,
   });
-  return r.data;
+  return res.data;
 };
 
 module.exports.ConsumerService = {
