@@ -23,7 +23,6 @@ const getAllProducts = async () => {
 
 /// Get most matching products for a consumer
 const getProductsByDemographics = async (userId, coordinates = []) => {
-  console.log(coordinates);
   try {
     // Find the user with the given userId
     const user = await Consumer.findById(userId);
@@ -137,8 +136,16 @@ function calculateMatchingScore(
   return score;
 }
 
+/// delete product
+const deleteProduct = async (productId) => {
+  console.log(productId);
+  const product = await Product.findById(productId);
+  return await product.deleteOne();
+};
+
 module.exports.ProductService = {
   createProduct,
   getAllProducts,
   getProductsByDemographics,
+  deleteProduct,
 };

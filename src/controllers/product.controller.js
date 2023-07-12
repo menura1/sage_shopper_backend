@@ -37,8 +37,19 @@ const getProductsByDemographics = async (req, res) => {
   }
 };
 
+/// delete product
+const deleteProduct = async (req, res) => {
+  try {
+    await ProductService.deleteProduct(req.body.id);
+    return res.json("Product deleted!");
+  } catch (e) {
+    return res.status(500).json(e.message);
+  }
+};
+
 module.exports.ProductController = {
   createProduct,
   getAllProducts,
   getProductsByDemographics,
+  deleteProduct,
 };

@@ -11,5 +11,6 @@ productRouter.get(
   Auth,
   ProductController.getProductsByDemographics
 );
+productRouter.post("/deleteProduct", Auth, ProductController.deleteProduct);
 
 module.exports.ProductRouter = productRouter;
