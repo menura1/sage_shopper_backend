@@ -17,6 +17,7 @@ productRouter.post("/deleteProduct", Auth, ProductController.deleteProduct);
 /// test code
 productRouter.get("/ip", async (req, res) => {
   console.log(req.socket.remoteAddress);
+  console.log(req.headers["x-forwarded-for"] || req.socket.remoteAddress);
   const r = await axios.request({
     method: "get",
     url: "http://ip-api.com/json?fields=lat,lon,country,city",
