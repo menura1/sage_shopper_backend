@@ -1,6 +1,7 @@
 const express = require("express");
 const { ProductController } = require("../controllers/product.controller");
 const { Auth } = require("../middleware/auth");
+const axios = require("axios");
 
 const productRouter = new express.Router();
 
@@ -12,5 +13,15 @@ productRouter.get(
   ProductController.getProductsByDemographics
 );
 productRouter.post("/deleteProduct", Auth, ProductController.deleteProduct);
+
+/// test code
+productRouter.post("/ip", async (req, res) => {
+  const r = await axios.request({
+    method: "get",
+    url: "http://ip-api.com/json?fields=lat,lon,country,city",
+  });
+  console.log(r);
+  return res.json(r.data);
+});
 
 module.exports.ProductRouter = productRouter;
